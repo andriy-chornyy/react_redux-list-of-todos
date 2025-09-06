@@ -16,6 +16,7 @@ export const fetchUser = createAsyncThunk<User, number>( // Создаем thunk
       if (err instanceof Error) {
         return thunkAPI.rejectWithValue(err.message);
       }
+
       return thunkAPI.rejectWithValue('Error fetching user');
     }
   },
