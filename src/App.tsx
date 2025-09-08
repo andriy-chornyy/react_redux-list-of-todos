@@ -2,27 +2,25 @@ import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { Loader, TodoFilter, TodoList, TodoModal } from './components';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from './app/store';
-import { fetchTodos } from './features/todos'; // thunk теперь вместо setTodos и т.п.
+import { useAppDispatch, useAppSelector } from './app/hooks';
+import { setTodos } from './features/todos';
 
 export const App = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
 
-  // Читаем из Redux состояние
-  const todos = useSelector((state: RootState) => state.todos.todos);
-  const loaded = useSelector((state: RootState) => state.todos.loaded);
-  const hasError = useSelector((state: RootState) => state.todos.hasError);
-  // const filter = useSelector((state: RootState) => state.filter);
-  const selectedTodo = useSelector(
-    (state: RootState) => state.todos.selectedTodo,
-  );
+  // Читаем состояние из Redux через кастомные хуки
+  const todos = useAppSelector(state => state.todos.todos);
+  const loaded = useAppSelector(state => state.todos.loaded);
+  const hasError = useAppSelector(state => state.todos.hasError);
+  const selectedTodo = useAppSelector(state => state.currentTodo.selectedTodo);
 
-  // Диспатчим thunk один раз при монтировании
+  // Загружаем todos при монтировании без thunk
   useEffect(() => {
-    dispatch(fetchTodos()); // thunk сам выполнит fetch, обновит loaded, todos и hasError
+    fetch('https://jsonplaceholder.typicode.com/todos')
+      .then(res => res.json())
+      .then(data => dispatch(setTodos(data)))
+      // .catch(() => dispatch(setError()));
   }, [dispatch]);
-  // console.log('selectedTodo?.id', selectedTodo);
 
   return (
     <>

@@ -1,18 +1,17 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-
+import { configureStore } from '@reduxjs/toolkit';
 import todosReducer from '../features/todos';
 import filterReducer from '../features/filter';
-import userReducer from '../features/currentTodo';
-
-const rootReducer = combineReducers({
-  todos: todosReducer,
-  filter: filterReducer,
-  user: userReducer,
-});
+import currentTodoReducer from '../features/currentTodo';
+import currentUserReducer from '../features/currentUser'; // <-- импорт нового слайса
 
 export const store = configureStore({
-  reducer: rootReducer,
+  reducer: {
+    todos: todosReducer,
+    filter: filterReducer,
+    currentTodo: currentTodoReducer,
+    currentUser: currentUserReducer, // <-- добавляем сюда
+  },
 });
 
-export type RootState = ReturnType<typeof rootReducer>;
+export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

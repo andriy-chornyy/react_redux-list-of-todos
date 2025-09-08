@@ -1,33 +1,26 @@
 /* eslint-disable */
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../app/store';
-import { setSelectedTodo } from '../../features/todos';
 import { Todo } from '../../types/Todo';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { setSelectedTodo } from '../../features/currentTodo';
 
 export const TodoList: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
 
-  const todos = useSelector((state: RootState) => state.todos.todos);
-  const filter = useSelector((state: RootState) => state.filter);
-  const selectedTodo = useSelector(
-    (state: RootState) => state.todos.selectedTodo,
-  );
+  const todos = useAppSelector(state => state.todos.todos);
+  const filter = useAppSelector(state => state.filter);
+  const selectedTodo = useAppSelector(state => state.currentTodo.selectedTodo);
 
   const normalizFilterValue = filter.query.trim().toLowerCase();
   let filteredTodos = todos;
 
-  if (filter.status === 'active') {
-    filteredTodos = todos.filter(todo => todo.completed === false);
-  } else if (filter.status === 'completed') {
-    filteredTodos = todos.filter(todo => todo.completed === true);
-  }
+  if (filter.status === 'active') filteredTodos = todos.filter(t => !t.completed);
+  else if (filter.status === 'completed') filteredTodos = todos.filter(t => t.completed);
 
-  if (normalizFilterValue.length > 0) {
-    filteredTodos = filteredTodos.filter(todo =>
-      todo.title.toLowerCase().includes(normalizFilterValue),
+  if (normalizFilterValue.length > 0)
+    filteredTodos = filteredTodos.filter(t =>
+      t.title.toLowerCase().includes(normalizFilterValue),
     );
-  }
 
   const handleClick = (todo: Todo) => {
     dispatch(setSelectedTodo(todo));
@@ -44,76 +37,49 @@ export const TodoList: React.FC = () => {
           <thead>
             <tr>
               <th>#</th>
-
               <th>
                 <span className="icon">
                   <i className="fas fa-check" />
                 </span>
               </th>
-
               <th>Title</th>
               <th> </th>
             </tr>
           </thead>
-
           <tbody>
-            {filteredTodos.length > 0
-              ? filteredTodos.map(todo => {
-                  return (
-                    <tr
-                      data-cy="todo"
-                      key={todo.id}
-                      className={
-                        selectedTodo?.id === todo.id
-                          ? 'has-background-info-light'
-                          : ''
-                      }
-                    >
-                      <td className="is-vcentered">{todo.id}</td>
-                      {/* <td className="is-vcentered"> </td> */}
-
-                      <td className="is-vcentered">
-                        {todo.completed && (
-                          <span className="icon" data-cy="iconCompleted">
-                            <i className="fas fa-check" />
-                          </span>
-                        )}
-                      </td>
-
-                      <td className="is-vcentered is-expanded">
-                        <p
-                          className={
-                            todo.completed
-                              ? 'has-text-success'
-                              : 'has-text-danger'
-                          }
-                        >
-                          {todo.title}
-                        </p>
-                      </td>
-
-                      <td className="has-text-right is-vcentered">
-                        <button
-                          data-cy="selectButton"
-                          className="button"
-                          type="button"
-                          onClick={() => handleClick(todo)}
-                        >
-                          <span className="icon">
-                            <i
-                              className={
-                                selectedTodo && selectedTodo.id === todo.id
-                                  ? 'far fa-eye-slash'
-                                  : 'far fa-eye'
-                              }
-                            />
-                          </span>
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })
-              : null}
+            {filteredTodos.map(todo => (
+              <tr
+                key={todo.id}
+                data-cy="todo"
+                className={selectedTodo?.id === todo.id ? 'has-background-info-light' : ''}
+              >
+                <td className="is-vcentered">{todo.id}</td>
+                <td className="is-vcentered">
+                  {todo.completed && (
+                    <span className="icon" data-cy="iconCompleted">
+                      <i className="fas fa-check" />
+                    </span>
+                  )}
+                </td>
+                <td className="is-vcentered is-expanded">
+                  <p className={todo.completed ? 'has-text-success' : 'has-text-danger'}>
+                    {todo.title}
+                  </p>
+                </td>
+                <td className="has-text-right is-vcentered">
+                  <button
+                    data-cy="selectButton"
+                    className="button"
+                    type="button"
+                    onClick={() => handleClick(todo)}
+                  >
+                    <span className="icon">
+                      <i className={selectedTodo?.id === todo.id ? 'far fa-eye-slash' : 'far fa-eye'} />
+                    </span>
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       )}
