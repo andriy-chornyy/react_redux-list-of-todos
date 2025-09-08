@@ -33,42 +33,45 @@ export const TodoModal: React.FC = () => {
       <div className="modal-background" />
 
       {loading && <Loader />}
-      {error && <p className="has-text-danger">Error: {error}</p>}
 
-      <div className="modal-card">
-        <header className="modal-card-head">
-          <div
-            className="modal-card-title has-text-weight-medium"
-            data-cy="modal-header"
-          >
-            Todo #{selectedTodo?.id}
+      {!loading ? (
+        <div className="modal-card">
+          <header className="modal-card-head">
+            <div
+              className="modal-card-title has-text-weight-medium"
+              data-cy="modal-header"
+            >
+              Todo #{selectedTodo?.id}
+            </div>
+
+            {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
+            <button
+              type="button"
+              className="delete"
+              data-cy="modal-close"
+              onClick={() => dispatch(setSelectedTodo(null))}
+            />
+          </header>
+
+          <div className="modal-card-body">
+            <p className="block" data-cy="modal-title">
+              {selectedTodo.title}
+            </p>
+
+            <p className="block" data-cy="modal-user">
+              {selectedTodo.completed === false ? (
+                <strong className="has-text-danger">Planned</strong>
+              ) : (
+                <strong className="has-text-success">Done</strong>
+              )}
+              {' by '}
+              <a href={`mailto: ${user?.email}`}>{user?.name}</a>
+            </p>
           </div>
-
-          {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-          <button
-            type="button"
-            className="delete"
-            data-cy="modal-close"
-            onClick={() => dispatch(setSelectedTodo(null))}
-          />
-        </header>
-
-        <div className="modal-card-body">
-          <p className="block" data-cy="modal-title">
-            {selectedTodo.title}
-          </p>
-
-          <p className="block" data-cy="modal-user">
-            {selectedTodo.completed === false ? (
-              <strong className="has-text-danger">Planned</strong>
-            ) : (
-              <strong className="has-text-success">Done</strong>
-            )}
-            {' by '}
-            <a href={`mailto: ${user?.email}`}>{user?.name}</a>
-          </p>
         </div>
-      </div>
+      ) : (
+        error && <p className="has-text-danger">Error: {error}</p>
+      )}
     </div>
   );
 };
