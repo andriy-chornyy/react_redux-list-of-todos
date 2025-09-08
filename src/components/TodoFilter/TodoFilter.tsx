@@ -69,6 +69,7 @@ import { setStatus, setQuery } from '../../features/filter';
 export const TodoFilter: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const filter = useSelector((state: RootState) => state.filter);
+  const query = useSelector((state: RootState) => state.filter.query);
 
   // Изменение статуса (all / active / completed)
   const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -118,12 +119,12 @@ export const TodoFilter: React.FC = () => {
         </span>
 
         <span className="icon is-right" style={{ pointerEvents: 'all' }}>
-          <button
+          {query.length > 0 && <button
             data-cy="clearSearchButton"
             type="button"
             className="delete"
             onClick={handleClearSearch}
-          />
+          />}
         </span>
       </p>
     </form>

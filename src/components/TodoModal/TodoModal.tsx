@@ -60,9 +60,9 @@ export const TodoModal: React.FC = () => {
 
           <p className="block" data-cy="modal-user">
             {selectedTodo.completed === false ? (
-              <strong className="has-text-danger">Planned </strong>
+              <strong className="has-text-danger">Planned</strong>
             ) : (
-              <strong className="has-text-success">Done </strong>
+              <strong className="has-text-success">Done</strong>
             )}
             {' by '}
             <a href={`mailto: ${user?.email}`}>{user?.name}</a>
