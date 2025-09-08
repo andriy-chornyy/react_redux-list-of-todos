@@ -19,8 +19,9 @@ export const TodoModal: React.FC = () => {
     };
   }, [selectedTodo, dispatch]);
 
-
-  if (!selectedTodo) return null;
+  if (!selectedTodo) {
+    return null;
+  }
 
   return (
     <div className="modal is-active" data-cy="modal">
@@ -29,7 +30,10 @@ export const TodoModal: React.FC = () => {
       {!loading ? (
         <div className="modal-card">
           <header className="modal-card-head">
-            <div className="modal-card-title has-text-weight-medium" data-cy="modal-header">
+            <div
+              className="modal-card-title has-text-weight-medium"
+              data-cy="modal-header"
+            >
               Todo #{selectedTodo.id}
             </div>
             <button

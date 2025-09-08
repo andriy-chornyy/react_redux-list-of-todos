@@ -18,8 +18,8 @@ export const App = () => {
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/todos')
       .then(res => res.json())
-      .then(data => dispatch(setTodos(data)))
-      // .catch(() => dispatch(setError()));
+      .then(data => dispatch(setTodos(data)));
+    // .catch(() => dispatch(setError()));
   }, [dispatch]);
 
   return (

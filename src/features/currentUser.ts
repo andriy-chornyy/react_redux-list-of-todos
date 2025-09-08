@@ -9,14 +9,16 @@ export const fetchUser = createAsyncThunk<User, number>(
   async (userId, thunkAPI) => {
     try {
       const user = await getUser(userId);
+
       return user;
     } catch (err: unknown) {
       if (err instanceof Error) {
         return thunkAPI.rejectWithValue(err.message);
       }
+
       return thunkAPI.rejectWithValue('Error fetching user');
     }
-  }
+  },
 );
 
 // интерфейс состояния
